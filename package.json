@@ -1,0 +1,27 @@
+{
+  "name": "spotter-eld-trip-planner",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Spotter AI ELD trip planner — Django + Next.js monorepo",
+  "workspaces": [
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently --kill-others-on-fail --names backend,frontend --prefix-colors blue,green \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "npm run dev --workspace=@spotter/frontend",
+    "dev:backend": "cd backend && ./scripts/dev.sh",
+    "build": "npm run build --workspace=@spotter/frontend",
+    "lint": "npm run lint --workspace=@spotter/frontend",
+    "setup": "npm install && npm run setup:assets && npm run setup:backend",
+    "setup:assets": "test -f frontend/public/blank-paper-log.png || (echo 'Missing frontend/public/blank-paper-log.png' && exit 1)",
+    "setup:backend": "cd backend && python3 -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt && cp -n .env.example .env 2>/dev/null || true && python manage.py migrate",
+    "migrate": "cd backend && . .venv/bin/activate && python manage.py migrate",
+    "makemigrations": "cd backend && . .venv/bin/activate && python manage.py makemigrations trip"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
